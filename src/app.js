@@ -16,12 +16,12 @@ let socketio = require( 'socket.io' );
 // database configs
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-var firebase = require("firebase/app");
+// var firebase = require("firebase/app");
 
-// Add the Firebase products that you want to use
-require("firebase/auth");
-require("firebase/firestore");
-require("firebase/database");
+// // Add the Firebase products that you want to use
+// require("firebase/auth");
+// require("firebase/firestore");
+// require("firebase/database");
 
 
 
@@ -35,6 +35,9 @@ require("firebase/database");
 //     appId: "1:64483244309:web:7c611555bc4b918c72111c",
 //     measurementId: "G-63BZQQVVKM"
 //   };
+let  { initializeApp } = require('firebase/app');
+let  { getDatabase } = require('firebase/database');
+
 
 var firebaseConfig = {
     apiKey: "AIzaSyCi-c2kk9cn-PFKDz_5u1t9Y-EQL1Eirzo",
@@ -46,10 +49,15 @@ var firebaseConfig = {
   };
   
 
+  const application = initializeApp(firebaseConfig);
+const database = getDatabase(application);
+
+
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
-dbRef = db.ref();
+// firebase.initializeApp(firebaseConfig);
+// firebase.automaticDataCollectionEnabled = true
+// var db = firebase.database()
+// dbRef = db.ref();
 
 // Ends here
 
@@ -98,7 +106,7 @@ app.post('/signup', function(req,res){
     var name = req.body.name;
     var email =req.body.email.split("@")[0];
     var pass = req.body.password;
-    let all_users = dbRef.child("users");
+   // let all_users = dbRef.child("users");
 
     try{
         all_users.once('value',(e)=>{
@@ -133,7 +141,7 @@ app.post('/signin', function(req,res){
     var pass = req.body.password;
 
     //check whether user is member or not 
-    let all_users = dbRef.child("users");
+    // let all_users = dbRef.child("users");
 
     try{
         all_users.once('value',(e)=>{
@@ -377,8 +385,6 @@ io.of('/user').on('connection',(socket)=>{
 
         socket.to(data.room).emit('chat',data);
         io.of('/stream').to(data.room).emit('chat',{ sender: data.sendername, msg: data.message });
-    });
+    });
 
 });
-
-
